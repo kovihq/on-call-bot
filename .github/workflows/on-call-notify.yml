@@ -24,7 +24,7 @@ jobs:
         id: log
         run: |
           echo ${{ steps.schedules.outputs.response }}
-          echo ${{ fromJson(steps.schedules.outputs.response.data).onCallParticipants }}
+          echo ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants }}
       - name: Map Responder
         id: responder
         run: |
