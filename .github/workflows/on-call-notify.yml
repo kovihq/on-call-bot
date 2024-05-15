@@ -3,7 +3,7 @@ name: On Call Notify
 on:
   push: 
     branches:
-      - release
+      - main
 
 jobs:
   notify:
