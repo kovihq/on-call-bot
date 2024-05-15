@@ -1,10 +1,13 @@
 name: CI - Staging
 
 on:
-  push: 'release'
+  push: 
+    branches:
+      - release
 
 jobs:
   notify:
+    name: 'Notifier'
     runs-on: ubuntu-latest
     steps:
       - name: Fetch schedules
@@ -15,8 +18,8 @@ jobs:
           method: 'GET'
           customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
       - name: Show Response
-      run: |
-        echo ${{ steps.schedules.outputs.response }}
-        echo ${{ steps.schedules.outputs.headers }}
-        echo ${{ steps.schedules.outputs.status }}
-        echo ${{ fromJson(steps.schedules.outputs.response).field_you_want_to_access }}
+        run: |
+          echo ${{ steps.schedules.outputs.response }}
+          echo ${{ steps.schedules.outputs.headers }}
+          echo ${{ steps.schedules.outputs.status }}
+          echo ${{ fromJson(steps.schedules.outputs.response).field_you_want_to_access }}
