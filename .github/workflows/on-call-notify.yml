@@ -24,13 +24,13 @@ jobs:
         id: responder
         run: |
           echo ${{ steps.schedules.outputs.response }}
-          echo "${{
+          echo ${{
               fromJson(
                 fromJson(
                   fromJson(steps.schedules.outputs.response).data
-                )
-              .onCallParticipants[0])
-          }}" >> "$GITHUB_OUTPUT"
+                ).onCallParticipants[0]
+              )
+          }} >> "$GITHUB_OUTPUT"
       - name: Send slack message
         uses: rtCamp/action-slack-notify@v2
         env:
