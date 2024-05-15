@@ -7,6 +7,7 @@ on:
 
 env:
   payments_schedule_id: f8c270c0-a11e-48cc-8715-39b8b4456b4d
+  payments_channel: C02BSHKTVHR
 
 jobs:
   notify:
@@ -23,9 +24,11 @@ jobs:
       - name: Send slack message
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_CHANNEL: 'C02BSHKTVHR'
+          SLACK_CHANNEL: ${{env.payments_channel}}
           SLACK_ICON: https://avatars.githubusercontent.com/u/47012371?s=150&v=4
           SLACK_MESSAGE: '[Test] ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants[0].name }} está on-call essa semana'
           SLACK_TITLE: '[Test] Payments On Call'
           SLACK_USERNAME: 'on-call-bot'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
+          MSG_MINIMAL: true
+          SLACK_MSG_AUTHOR: kovihq
