@@ -5,21 +5,56 @@ on:
     branches:
       - main
 
+env:
+  payments_schedule_id: f8c270c0-a11e-48cc-8715-39b8b4456b4d
+
 jobs:
   notify:
     name: 'Notifier'
     runs-on: ubuntu-latest
     steps:
-      - name: Fetch schedules
+      - name: Fetch on call
         id: schedules
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.opsgenie.com/v2/schedules'
+          url: 'https://api.opsgenie.com/v2/schedules/${{env.payments_schedule_id}}}/on-calls'
           method: 'GET'
           customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
       - name: Show Response
         run: |
           echo ${{ steps.schedules.outputs.response }}
-          echo ${{ steps.schedules.outputs.headers }}
-          echo ${{ steps.schedules.outputs.status }}
-          echo ${{ fromJson(steps.schedules.outputs.response).field_you_want_to_access }}
+          echo ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants }}
+          echo ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants[0] }}
+      - name: Send slack message
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: 'squad-payments-dev'
+          SLACK_ICON: https://avatars.githubusercontent.com/u/47012371?s=150&v=4
+          SLACK_MESSAGE: '[Test] ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants[0].name }} está on-call essa semana'
+          SLACK_TITLE: '[Test] ${{ fromJson(steps.schedules.outputs.response).data._parent.name }} está on-call essa semana'
+          SLACK_USERNAME: on-call-bot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
+
+    # steps:
+    #   - name: Fetch schedules
+    #     id: schedules
+    #     uses: fjogeleit/http-request-action@v1
+    #     with:
+    #       url: 'https://api.opsgenie.com/v2/schedules'
+    #       method: 'GET'
+    #       customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
+    #   - name: Show Response
+    #     run: |
+    #       echo ${{ steps.schedules.outputs.response }}
+    #   - name: Find Team
+    #     run: |
+    #       schedules=${{ fromJson(steps.schedules.outputs.response).data }}
+    #       for item in ${schedules[*]}
+    #       do
+    #         teamName=($(jq -r '.name' item))
+    #         if [[ "$item" == "Payments-on-call-schedule" ]]; then
+    #           echo item
+    #         fi
+            
+    #         echo "Finished!"
+    #       done
