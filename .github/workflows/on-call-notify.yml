@@ -24,13 +24,13 @@ jobs:
         id: responder
         run: |
           echo ${{ steps.schedules.outputs.response }}
-          echo ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants[0] }} >> "$GITHUB_OUTPUT"
+          echo ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants[0].name }} >> "$GITHUB_OUTPUT"
       - name: Send slack message
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: 'C02BSHKTVHR'
           SLACK_ICON: https://avatars.githubusercontent.com/u/47012371?s=150&v=4
-          SLACK_MESSAGE: '[Test] ${{ fromJson(steps.responder.outputs.name).name }} está on-call essa semana'
+          SLACK_MESSAGE: '[Test] ${{ steps.responder.outputs }} está on-call essa semana'
           SLACK_TITLE: '[Test] Payments On Call'
           SLACK_USERNAME: 'on-call-bot'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
