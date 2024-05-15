@@ -1,19 +1,22 @@
 name: CI - Staging
 
+on:
+  push: 'release'
+
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
-    - name: Fetch schedules
-      id: schedules
-      uses: fjogeleit/http-request-action@v1
-      with:
-        url: 'https://api.opsgenie.com/v2/schedules'
-        method: 'GET'
-        customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
-    - name: Show Response
-    run: |
-      echo ${{ steps.schedules.outputs.response }}
-      echo ${{ steps.schedules.outputs.headers }}
-      echo ${{ steps.schedules.outputs.status }}
-      echo ${{ fromJson(steps.schedules.outputs.response).field_you_want_to_access }}
+      - name: Fetch schedules
+        id: schedules
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: 'https://api.opsgenie.com/v2/schedules'
+          method: 'GET'
+          customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
+      - name: Show Response
+      run: |
+        echo ${{ steps.schedules.outputs.response }}
+        echo ${{ steps.schedules.outputs.headers }}
+        echo ${{ steps.schedules.outputs.status }}
+        echo ${{ fromJson(steps.schedules.outputs.response).field_you_want_to_access }}
