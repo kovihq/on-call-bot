@@ -17,7 +17,7 @@ jobs:
         id: schedules
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.opsgenie.com/v2/schedules/${{env.payments_schedule_id}}}/on-calls'
+          url: 'https://api.opsgenie.com/v2/schedules/${{env.payments_schedule_id}}/on-calls'
           method: 'GET'
           customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
       - name: Show Response
@@ -32,29 +32,5 @@ jobs:
           SLACK_ICON: https://avatars.githubusercontent.com/u/47012371?s=150&v=4
           SLACK_MESSAGE: '[Test] ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants[0].name }} está on-call essa semana'
           SLACK_TITLE: '[Test] ${{ fromJson(steps.schedules.outputs.response).data._parent.name }} está on-call essa semana'
-          SLACK_USERNAME: on-call-bot
+          SLACK_USERNAME: 'on-call-bot'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
-
-    # steps:
-    #   - name: Fetch schedules
-    #     id: schedules
-    #     uses: fjogeleit/http-request-action@v1
-    #     with:
-    #       url: 'https://api.opsgenie.com/v2/schedules'
-    #       method: 'GET'
-    #       customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
-    #   - name: Show Response
-    #     run: |
-    #       echo ${{ steps.schedules.outputs.response }}
-    #   - name: Find Team
-    #     run: |
-    #       schedules=${{ fromJson(steps.schedules.outputs.response).data }}
-    #       for item in ${schedules[*]}
-    #       do
-    #         teamName=($(jq -r '.name' item))
-    #         if [[ "$item" == "Payments-on-call-schedule" ]]; then
-    #           echo item
-    #         fi
-            
-    #         echo "Finished!"
-    #       done
