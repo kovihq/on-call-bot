@@ -20,17 +20,17 @@ jobs:
           url: 'https://api.opsgenie.com/v2/schedules/${{env.payments_schedule_id}}/on-calls'
           method: 'GET'
           customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
+      - name: Show items
+        id: log
+        run: |
+          echo ${{ steps.schedules.outputs.response }}
+          echo ${{ fromJson(steps.schedules.outputs.response.data.onCallParticipants[0])) }}
       - name: Map Responder
         id: responder
         run: |
           echo ${{ steps.schedules.outputs.response }}
-          echo ${{
-              fromJson(
-                fromJson(
-                  fromJson(steps.schedules.outputs.response).data
-                ).onCallParticipants[0]
-              )
-          }} >> "$GITHUB_OUTPUT"
+          echo ${{ fromJson(fromJson(fromJson(steps.schedules.outputs.response).data).onCallParticipants[0]) }} >> "$GITHUB_OUTPUT"
+          echo ${{ fromJson(fromJson(fromJson(steps.schedules.outputs.response).data).onCallParticipants[0]) }} >> "$GITHUB_OUTPUT"
       - name: Send slack message
         uses: rtCamp/action-slack-notify@v2
         env:
