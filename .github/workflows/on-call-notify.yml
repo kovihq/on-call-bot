@@ -10,25 +10,59 @@ env:
   payments_channel: C02BSHKTVHR
 
 jobs:
-  notify:
-    name: 'Notifier'
+  prepare:
+    name: 'Prepare Schedules'
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.save.outputs.json }}
     steps:
-      - name: Fetch on call
+      - name: Fetch schedules
         id: schedules
         uses: fjogeleit/http-request-action@v1
         with:
-          url: 'https://api.opsgenie.com/v2/schedules/${{env.payments_schedule_id}}/on-calls'
+          url: 'https://api.opsgenie.com/v2/schedules'
           method: 'GET'
           customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
-      - name: Send slack message
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_CHANNEL: ${{env.payments_channel}}
-          SLACK_ICON: https://avatars.githubusercontent.com/u/47012371?s=150&v=4
-          SLACK_MESSAGE: '[Test] ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants[0].name }} está on-call essa semana'
-          SLACK_TITLE: '[Test] Payments On Call'
-          SLACK_USERNAME: 'on-call-bot'
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
-          MSG_MINIMAL: true
-          SLACK_MSG_AUTHOR: kovihq
+      - name: Store matrix
+        id: save
+        uses: nickofthyme/object-remap@v1
+        with:
+          include.*.team: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.ownerTeam.name) }}
+          include.*.schedule_id: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.id) }}
+          include.*.schedule_name: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.name) }}
+  notifier:
+    name: 'Log result'
+    runs-on: ubuntu-latest
+    needs: prepare
+    strategy:
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+      fail-fast: false
+    steps:
+      - if: contains(${{ matrix.schedule_name }}, "on-call")
+        name: Echo team
+        run: echo "team: ${{ matrix.team }}"
+      - if: contains(${{ matrix.schedule_name }}, "on-call")
+        name: Echo schedule_id
+        run: echo "schedule_id: ${{ matrix.schedule_id }}"
+      - if: contains(${{ matrix.schedule_name }}, "on-call")
+        name: Echo schedule_name
+        run: echo "schedule_name: ${{ matrix.schedule_name }}"
+      # - name: Fetch on call
+      #   id: schedules
+      #   uses: fjogeleit/http-request-action@v1
+      #   with:
+      #     url: 'https://api.opsgenie.com/v2/schedules/${{env.payments_schedule_id}}/on-calls'
+      #     method: 'GET'
+      #     customHeaders: '{"Authorization": "GenieKey ${{ secrets.OPS_GENIE_KEY }}"}'
+      # - name: Send slack message
+      #   uses: rtCamp/action-slack-notify@v2
+      #   env:
+      #     SLACK_CHANNEL: ${{env.payments_channel}}
+      #     SLACK_ICON: https://avatars.githubusercontent.com/u/47012371?s=150&v=4
+      #     SLACK_MESSAGE: '[Test] ${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants[0].name }} está on-call essa semana'
+      #     SLACK_TITLE: '[Test] Payments On Call'
+      #     SLACK_USERNAME: 'on-call-bot'
+      #     SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
+      #     MSG_MINIMAL: true
+      #     SLACK_MSG_AUTHOR: kovihq
+      #     SLACK_FOOTER: '<https://github.com/rtCamp/github-actions-library|Powered By rtCamp's GitHub Actions Library>'
