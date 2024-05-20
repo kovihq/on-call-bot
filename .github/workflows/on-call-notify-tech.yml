@@ -12,7 +12,7 @@ on:
 
 jobs:
   notify:
-    uses: ./.github/workflows/on-call-temaplte.yml
+    uses: ./.github/workflows/on-call-template.yml
     secrets: inherit
     with:
       channelId: CEW7CLZP1 # team-engineers

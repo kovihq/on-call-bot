@@ -6,7 +6,7 @@ on:
 
 jobs:
   notify:
-    uses: ./.github/workflows/on-call-temaplate.yml
+    uses: ./.github/workflows/on-call-template.yml
     secrets: inherit
     with:
       channelId: CEZ6B64UE  # bugs
