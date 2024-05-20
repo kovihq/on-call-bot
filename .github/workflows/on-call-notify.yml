@@ -40,13 +40,13 @@ jobs:
     steps:
       - if: contains(${{ matrix.schedule_name }}, "on-call")
         name: Echo team
-        run: echo "team: ${{ matrix.team }}"
+        run: echo "team - ${{ matrix.team }}"
       - if: contains(${{ matrix.schedule_name }}, "on-call")
         name: Echo schedule_id
-        run: echo "schedule_id: ${{ matrix.schedule_id }}"
+        run: echo "schedule_id - ${{ matrix.schedule_id }}"
       - if: contains(${{ matrix.schedule_name }}, "on-call")
         name: Echo schedule_name
-        run: echo "schedule_name: ${{ matrix.schedule_name }}"
+        run: echo "schedule_name - ${{ matrix.schedule_name }}"
       # - name: Fetch on call
       #   id: schedules
       #   uses: fjogeleit/http-request-action@v1
