@@ -1,0 +1,15 @@
+name: (#Bugs) On Call Notify 
+
+on:
+  schedule:
+    - cron: "0 09 * * *" 
+
+jobs:
+  notify:
+    uses: ./.github/workflows/on-call-temaplate.yml
+    secrets: inherit
+    with:
+      channelId: CEZ6B64UE  # bugs
+      title: 'Plantão'
+      userMessage: 'estará atuando como apoio técnico essa semana'
+      footer: ''

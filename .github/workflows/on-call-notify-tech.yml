@@ -1,0 +1,21 @@
+name: (#Team-engineers) On Call Notify 
+
+# on:
+#   schedule:
+#     - cron: "0 09 * * 1" 
+
+on:
+  push: 
+    branches:
+      - main
+
+
+jobs:
+  notify:
+    uses: ./.github/workflows/on-call-temaplte.yml
+    secrets: inherit
+    with:
+      channelId: CEW7CLZP1 # team-engineers
+      title: 'On Call'
+      userMessage: 'está on-call essa semana'
+      footer: '<https://kovihq.app.opsgenie.com/settings/schedule/detail/${{matrix.scheduleId}}|Para mais detalhes>'

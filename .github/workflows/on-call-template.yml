@@ -1,13 +1,24 @@
 name: On Call Notify
 
 on:
-  push: 
-    branches:
-      - main
-
-env:
-  payments_schedule_id: f8c270c0-a11e-48cc-8715-39b8b4456b4d
-  payments_channel: C02BSHKTVHR
+  workflow_call:
+    inputs:
+      channelId:
+        description: Slack channel id
+        type: string
+        required: true
+      userMessage:
+        description: Message to go after responder email
+        type: string
+        required: true
+      title:
+        description: Title to go After team
+        type: string
+        required: true
+      footer:
+        description: Message Footer
+        type: string
+        required: true
 
 jobs:
   prepare:
@@ -53,12 +64,12 @@ jobs:
         name: Send slack message
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_CHANNEL: ${{env.payments_channel}}
+          SLACK_CHANNEL: ${{inputs.channelId}}
           SLACK_ICON: https://avatars.githubusercontent.com/u/47012371?s=150&v=4
-          SLACK_TITLE: '${{matrix.team}} On Call'
-          SLACK_MESSAGE: '${{ fromJson(steps.oncall.outputs.response).data.onCallParticipants[0].name }} está on-call essa semana'
+          SLACK_TITLE: '${{matrix.team}} - ${{inputs.title}}'
+          SLACK_MESSAGE: '${{ fromJson(steps.oncall.outputs.response).data.onCallParticipants[0].name }} ${{inputs.userMessage}}'
           SLACK_USERNAME: 'on-call-bot'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
           MSG_MINIMAL: true
           SLACK_MSG_AUTHOR: kovihq
-          SLACK_FOOTER: '<https://kovihq.app.opsgenie.com/settings/schedule/detail/${{matrix.scheduleId}}|Para mais detalhes>'
+          SLACK_FOOTER: ${{inputs.footer}}
