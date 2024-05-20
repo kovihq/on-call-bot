@@ -1,6 +1,7 @@
 name: (#Bugs) On Call Notify 
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 09 * * *" 
 
