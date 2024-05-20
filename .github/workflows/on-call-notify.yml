@@ -32,12 +32,11 @@ jobs:
           include.*.scheduleName: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.name) }}
   notifier:
     name: 'Log result'
+    runs-on: ubuntu-latest
+    needs: prepare
     strategy:
       matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
       fail-fast: false
-    if: ${{ contains(matrix.scheduleName, 'on-call') }}
-    runs-on: ubuntu-latest
-    needs: prepare
     steps:
       - if: ${{ contains(matrix.scheduleName, 'on-call') }}
         name: Log infos
