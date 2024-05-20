@@ -30,7 +30,7 @@ jobs:
           include.*.team: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.ownerTeam.name) }}
           include.*.scheduleId: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.id) }}
           include.*.scheduleName: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.name) }}
-          include.*.isOnCall: ${{ contains(fromJson(steps.schedules.outputs.response).data.*.name, 'on-call') }}
+          include.*.isOnCall: ${{ contains(toJSON(fromJson(steps.schedules.outputs.response).data.*.name), 'on-call') }}
   notifier:
     name: 'Log result'
     runs-on: ubuntu-latest
