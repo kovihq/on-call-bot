@@ -56,7 +56,7 @@ jobs:
           SLACK_CHANNEL: ${{env.payments_channel}}
           SLACK_ICON: https://avatars.githubusercontent.com/u/47012371?s=150&v=4
           SLACK_TITLE: '${{matrix.team}} On Call'
-          SLACK_MESSAGE: '${{ fromJson(steps.schedules.outputs.response).data.onCallParticipants[0].name }} está on-call essa semana'
+          SLACK_MESSAGE: '${{ fromJson(steps.oncall.outputs.response).data.onCallParticipants[0].name }} está on-call essa semana'
           SLACK_USERNAME: 'on-call-bot'
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
           MSG_MINIMAL: true
