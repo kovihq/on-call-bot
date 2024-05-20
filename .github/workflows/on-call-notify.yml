@@ -28,8 +28,8 @@ jobs:
         uses: nickofthyme/object-remap@v1
         with:
           include.*.team: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.ownerTeam.name) }}
-          include.*.schedule_id: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.id) }}
-          include.*.schedule_name: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.name) }}
+          include.*.scheduleId: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.id) }}
+          include.*.scheduleName: ${{ toJSON(fromJson(steps.schedules.outputs.response).data.*.name) }}
   notifier:
     name: 'Log result'
     runs-on: ubuntu-latest
@@ -38,12 +38,12 @@ jobs:
       matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
       fail-fast: false
     steps:
-      - if: contains(${{ matrix.schedule_name }}, "on-call")
+      - if: contains(${{ matrix.scheduleName }}, "on-call")
         name: Echo matrix
         run: echo "${{ toJSON(matrix) }}"
-      - if: contains(${{ matrix.schedule_name }}, "on-call")
+      - if: contains(${{ matrix.scheduleName }}, "on-call")
         name: Echo infos
-        run: echo "team - ${{ matrix.team }} | schedule_id - ${{ matrix.schedule_id }} | schedule_name - ${{ matrix.schedule_name }}"
+        run: echo "team - ${{ matrix.team }} | scheduleName - ${{ matrix.scheduleName }} | scheduleId - ${{ matrix.scheduleId }}"
       # - name: Fetch on call
       #   id: schedules
       #   uses: fjogeleit/http-request-action@v1
