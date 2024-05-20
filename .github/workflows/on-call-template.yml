@@ -16,8 +16,8 @@ on:
         type: string
         required: true
       footer:
-        description: Message Footer
-        type: string
+        description: Footer toggle
+        type: boolean
         required: true
 
 jobs:
@@ -72,4 +72,4 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
           MSG_MINIMAL: true
           SLACK_MSG_AUTHOR: kovihq
-          SLACK_FOOTER: ${{inputs.footer}}
+          SLACK_FOOTER: ${{ inputs.footer && format('<https://kovihq.app.opsgenie.com/settings/schedule/detail/{0}|Para mais detalhes>', matrix.scheduleId) || '' }}

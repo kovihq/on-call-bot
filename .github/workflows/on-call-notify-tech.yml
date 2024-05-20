@@ -4,7 +4,6 @@ on:
   schedule:
     - cron: "0 09 * * 1" 
 
-
 jobs:
   notify:
     uses: ./.github/workflows/on-call-template.yml
@@ -13,4 +12,4 @@ jobs:
       channelId: CEW7CLZP1 # team-engineers
       title: 'On Call'
       userMessage: 'está on-call essa semana'
-      footer: '<https://kovihq.app.opsgenie.com/settings/schedule/detail/${{matrix.scheduleId}}|Para mais detalhes>'
+      footer: true

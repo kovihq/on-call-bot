@@ -13,4 +13,4 @@ jobs:
       channelId: CEZ6B64UE  # bugs
       title: 'Plantão'
       userMessage: 'estará atuando como apoio técnico essa semana'
-      footer: ''
+      footer: false
