@@ -3,7 +3,7 @@ name: (#Bugs) On Call Notify
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 09 * * *" 
+    - cron: "0 12 * * *" 
 
 jobs:
   notify:
@@ -13,4 +13,4 @@ jobs:
       channelId: CEZ6B64UE  # bugs
       title: 'Plantão'
       userMessage: 'estará atuando como apoio técnico essa semana'
-      footer: false
+      footerMessage: "Por favor não entrem em contato direto (DM), use o canal ou abra uma SI"

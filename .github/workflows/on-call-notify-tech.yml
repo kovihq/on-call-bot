@@ -2,7 +2,7 @@ name: (#Team-engineers) On Call Notify
 
 on:
   schedule:
-    - cron: "0 09 * * 1" 
+    - cron: "0 12 * * 1" 
 
 jobs:
   notify:
@@ -12,4 +12,3 @@ jobs:
       channelId: CEW7CLZP1 # team-engineers
       title: 'On Call'
       userMessage: 'está on-call essa semana'
-      footer: true

@@ -15,10 +15,10 @@ on:
         description: Title to go After team
         type: string
         required: true
-      footer:
-        description: Footer toggle
-        type: boolean
-        required: true
+      footerMessage:
+        description: Footer message
+        type: string
+        required: false
 
 jobs:
   prepare:
@@ -72,4 +72,4 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_DEPLOY }}
           MSG_MINIMAL: true
           SLACK_MSG_AUTHOR: kovihq
-          SLACK_FOOTER: ${{ inputs.footer && format('<https://kovihq.app.opsgenie.com/settings/schedule/detail/{0}|Para mais detalhes>', matrix.scheduleId) || '' }}
+          SLACK_FOOTER: ${{ inputs.footerMessage || format('<https://kovihq.app.opsgenie.com/settings/schedule/detail/{0}|Para mais detalhes>', matrix.scheduleId) }}
